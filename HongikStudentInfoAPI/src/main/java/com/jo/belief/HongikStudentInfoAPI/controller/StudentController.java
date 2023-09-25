@@ -44,6 +44,16 @@ public class StudentController {
 
     @PutMapping("/register")
     public ResponseEntity<String> registerStudent(@RequestParam String name, @RequestParam String email, @RequestParam Integer graduation) {
+        List<Student> existingStudents = studentRepository.findByName(name);
+        if (!existingStudents.isEmpty()) {
+            return ResponseEntity.status(400).body("Already registered");
+        }
+        Student newStudent = new Student();
+        newStudent.setName(name);
+        newStudent.setEmail(email);
+        newStudent.setGraduation(graduation);
+        studentRepository.save(newStudent);
 
+        return ResponseEntity.ok("Registration successful");
     }
 }
