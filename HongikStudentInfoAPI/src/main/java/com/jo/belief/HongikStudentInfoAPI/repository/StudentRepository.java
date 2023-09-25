@@ -18,13 +18,16 @@ public class StudentRepository {
     public List<Student> findByName(String name){
         return em.createQuery("select s from Student s where s.name = :name",Student.class)
                 .getResultList();
-    };
+    }
     public List<Student> findByEmail(String email){
         return em.createQuery("select s from Student s where s.email = :email",Student.class)
                 .getResultList();
-    };
+    }
     public List<Student> findByDegree(String degree){
         return em.createQuery("select s from Student s where s.degree = :degree",Student.class)
                 .getResultList();
-    };
+    }
+    public void close() {
+        em.close();
+    }
 }
