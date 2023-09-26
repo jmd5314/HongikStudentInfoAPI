@@ -2,9 +2,12 @@ package com.jo.belief.HongikStudentInfoAPI.Service;
 
 import com.jo.belief.HongikStudentInfoAPI.entity.Student;
 import com.jo.belief.HongikStudentInfoAPI.repository.StudentRepository;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,31 +20,30 @@ import java.util.List;
 public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
-    @Transactional
+    @PostConstruct
     public void crawlAndLoad() {
         try {
-            // 웹 페이지에서 학생 정보 크롤링
-            Document document = Jsoup.connect("https://apl.hongik.ac.kr/lecture/dbms").get();
-            Element studentList = document.select("ul.student-list").first();
+            String url = "https://apl.hongik.ac.kr/lecture/dbms";
+            Document document = Jsoup.connect(url).get();
 
-            // 각 학생 정보를 데이터베이스에 저장
-            for (Element studentElement : studentList.children()) {
-                String name = studentElement.select("li.student-name").text();
-                String email = studentElement.select("li.student-email").text();
-                String degree = studentElement.select("li.student-degree").text();
-                int graduation = Integer.parseInt(studentElement.select("li.student-graduation").text());
+            processStudents(document, "PhD Students", "Phd");
+            processStudents(document, "Master Students", "Master");
+            processStudents(document, "Undergraduate Students", "Undergraduate");
 
-                // Student 엔티티에 저장
-                Student student = new Student();
-                student.setName(name);
-                student.setEmail(email);
-                student.setDegree(degree);
-                student.setGraduation(graduation);
-
-                studentRepository.save(student);
-            }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    private void processStudents(Document document, String degreeTitle, String degree) {
+        Elements students = document.select("h2:contains(" + degreeTitle + ") + ul li");
+        for (Element studentElement : students) {
+            String[] studentInfo = studentElement.text().split(", ");
+                Student student = new Student();
+                student.setDegree(degree);
+                student.setName(studentInfo[0]);
+                student.setEmail(studentInfo[1]);
+                student.setGraduation(Integer.valueOf(studentInfo[2]));
+                studentRepository.save(student);
         }
     }
     @Transactional
@@ -57,7 +59,7 @@ public class StudentService {
     public List<Student> findByDegree(String degree){
         return studentRepository.findByDegree(degree);
     }
-    @Transactional
+    @PreDestroy
     public void close(){
         studentRepository.close();
     }

@@ -15,14 +15,6 @@ import java.util.List;
 public class StudentController {
     @Autowired
     private StudentService studentService;
-    @PostConstruct
-    public void init(){
-        studentService.crawlAndLoad();
-    }
-    @PreDestroy
-    public void end(){
-        studentService.close();
-    }
     @GetMapping("/degree")
     public ResponseEntity<String> getDegreeByName(@RequestParam String name){
         List<Student> students = studentService.findByName(name);
