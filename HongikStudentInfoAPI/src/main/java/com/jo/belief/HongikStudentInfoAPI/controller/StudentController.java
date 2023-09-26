@@ -2,8 +2,6 @@ package com.jo.belief.HongikStudentInfoAPI.controller;
 
 import com.jo.belief.HongikStudentInfoAPI.Service.StudentService;
 import com.jo.belief.HongikStudentInfoAPI.entity.Student;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +26,7 @@ public class StudentController {
 
     @GetMapping("/email")
     public ResponseEntity<String> getEmailByName(@RequestParam String name) {
-        List<Student> students = studentService.findByEmail(name);
+        List<Student> students = studentService.findByName(name);
         if (students.isEmpty()) {
             return ResponseEntity.status(404).body("No such student");
         } else if (students.size() > 1) {
@@ -43,7 +41,7 @@ public class StudentController {
         return ResponseEntity.ok("Number of "+degree+"student :"+students.size());
     }
 
-    @PutMapping("/register")
+    @PutMapping  ("/register")
     public ResponseEntity<String> registerStudent(@RequestParam String name, @RequestParam String email, @RequestParam Integer graduation) {
         List<Student> existingStudents = studentService.findByName(name);
         if (!existingStudents.isEmpty()) {

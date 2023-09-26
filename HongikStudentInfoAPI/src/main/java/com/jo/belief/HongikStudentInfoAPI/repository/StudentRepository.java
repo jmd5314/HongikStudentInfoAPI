@@ -12,19 +12,25 @@ public class StudentRepository {
     public StudentRepository(EntityManager em) {
         this.em = em;
     }
+    public void deleteAll() {
+        em.createQuery("DELETE FROM Student").executeUpdate();
+    }
     public void save(Student student){
         em.persist(student);
     }
     public List<Student> findByName(String name){
         return em.createQuery("select s from Student s where s.name = :name",Student.class)
+                .setParameter("name", name)
                 .getResultList();
     }
     public List<Student> findByEmail(String email){
         return em.createQuery("select s from Student s where s.email = :email",Student.class)
+                .setParameter("email", email)
                 .getResultList();
     }
     public List<Student> findByDegree(String degree){
         return em.createQuery("select s from Student s where s.degree = :degree",Student.class)
+                .setParameter("degree", degree)
                 .getResultList();
     }
     public void close() {

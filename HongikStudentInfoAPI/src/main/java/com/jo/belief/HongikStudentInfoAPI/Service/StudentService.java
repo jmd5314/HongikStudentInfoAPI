@@ -27,6 +27,7 @@ public class StudentService {
     @Transactional
     public void crawlAndLoad() {
         try {
+            studentRepository.deleteAll();
             String url = "https://apl.hongik.ac.kr/lecture/dbms";
             Document document = Jsoup.connect(url).get();
 
