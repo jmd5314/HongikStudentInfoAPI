@@ -9,6 +9,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +18,13 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
+@EnableScheduling
 @Transactional(readOnly = true)
 public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
-    @PostConstruct
+    @Scheduled(fixedRate = 3600000)
+    @Transactional
     public void crawlAndLoad() {
         try {
             String url = "https://apl.hongik.ac.kr/lecture/dbms";
@@ -59,7 +63,7 @@ public class StudentService {
     public List<Student> findByDegree(String degree){
         return studentRepository.findByDegree(degree);
     }
-    @PreDestroy
+    @Transactional
     public void close(){
         studentRepository.close();
     }
