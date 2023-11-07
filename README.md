@@ -4,7 +4,7 @@
 
 ## 목표
 
-https://apl.hongik.ac.kr/lecture/dbm 에 있는 대학원, 학부생들의 정보를 가지고 데이터베이스를 만든 후에 REST API (Application Programming Interface) 를 통한 사용자의 각종 질의를 처리할 수 있는 Spring Boot 기반의 웹 서버를 만들어보도록 합니다.
+https://apl.hongik.ac.kr/lecture/dbms 에 있는 대학원, 학부생들의 정보를 가지고 데이터베이스를 만든 후에 REST API (Application Programming Interface) 를 통한 사용자의 각종 질의를 처리할 수 있는 Spring Boot 기반의 웹 서버를 만들어보도록 합니다.
 
 ## 요구 사항
 
